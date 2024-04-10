@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender Quiz</title>
+</head>
+<body>
+    <h1>Movie Recommender Quiz</h1>
+    <form action="/results" method="post">
+        <label for="genre">Choose a genre:</label>
+        <select name="genre" id="genre">
+            <option value="action">Action</option>
+            <option value="comedy">Comedy</option>
+            <option value="drama">Drama</option>
+            <!-- Add more options as needed -->
+        </select>
+        <br><br>
+        <label for="rating">Choose a minimum review score:</label>
+        <input type="text" id="rating" name="rating">
+        <br><br>
+        <label for="keyword">Enter a keyword (optional):</label>
+        <input type="text" id="keyword" name="keyword">
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
