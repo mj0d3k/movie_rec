@@ -1,2 +1,2 @@
 # movie_rec
-Django Framework movie recommendation engine. Design by ____ in Figma.
+Mvie recommendation engine. Design by ____ in Figma.
