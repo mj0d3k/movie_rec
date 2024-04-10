@@ -6,19 +6,15 @@ import numpy as np
 app = Flask(__name__)
 
 WEIGHTS = {
-    "names": 5,
-    "date_x": 2,
+    "genre": 5,
     "score": 3,
-    "genre": 3,
-    "overview": 2,
+    "names": 2,
     "crew": 2,
-    "orig_title": 2,
-    "status": 1,
-    "orig_lang": 1,
-    "budget_x": 1,
-    "revenue": 1,
-    "country": 1
+    "overview": 2,
+    "country": 2
 }
+
+# Pozostałe wagi domyślnie 0
 
 def jaccard_similarity(set1, set2):
     intersection = len(set1.intersection(set2))
@@ -81,23 +77,29 @@ def search_movies(query, tf_idf_matrix, vectorizer, movies):
 def movie_search():
     if request.method == 'POST':
         user_query = request.form.get('user_query', '').strip()
-        threshold = float(request.form.get('threshold', 0.5))
-        number_of_results = int(request.form.get('num_results', 50))
+        genre = request.form.getlist('genre')
+        score = int(request.form.get('score', 0))
 
         # Load data from CSV file
-        df = pd.read_csv('movies.csv')
+        df = pd.read_csv('imdb_movies.csv')
+
+        # Filter data based on user input
+        filtered_movies = df.copy()
+        if genre:
+            filtered_movies = filtered_movies[filtered_movies['genre'].str.contains('|'.join(genre))]
+        if score:
+            filtered_movies = filtered_movies[filtered_movies['score'] >= score]
 
         # Convert DataFrame to list of dictionaries
-        movies = df.to_dict(orient='records')
+        movies = filtered_movies.to_dict(orient='records')
 
         corrected_query = correct_query(user_query, movies)
         tf_idf_matrix, vectorizer = calculate_tf_idf(movies)
         top_movies = search_movies(corrected_query, tf_idf_matrix, vectorizer, movies)
-        top_movies = top_movies[:number_of_results]
 
-        return render_template('view1.html', results=top_movies)
+        return render_template('quiz.html', results=top_movies)
 
-    return render_template('view1.html')
+    return render_template('quiz.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
